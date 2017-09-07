@@ -1,0 +1,27 @@
+{
+  "name": "pull-request-blink",
+  "version": "1.0.0",
+  "description": "Blink a light when a new pull request has been created",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tlehman/pull-request-blink.git"
+  },
+  "keywords": [
+    "pull-request",
+    "blink",
+    "particle-photon"
+  ],
+  "author": "Tobi Lehman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tlehman/pull-request-blink/issues"
+  },
+  "homepage": "https://github.com/tlehman/pull-request-blink#readme",
+  "dependencies": {
+    "express": "^4.15.4"
+  }
+}
