@@ -52,7 +52,7 @@ app.post("/blink", (req, res) => {
     console.log("POST /blink");
     if(verifyGithub(req)) {
         console.log("Github signature verified, setting color");
-        if(req.body.action.match(/opened$/)) {
+        if(req.body.action && req.body.action.match(/opened$/)) {
             setRedForTenSecondsThenGreen();
         } else if(req.body.action == "closed") {
             setBlueForFiveSecondsThenGreen();
