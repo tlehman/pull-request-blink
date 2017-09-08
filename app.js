@@ -2,6 +2,10 @@
 const express = require('express');
 const app = express();
 const Orb = require('./orb');
+const crypto = require('crypto');
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
 
 // instantiate the Orb
 const particlePhotonId = process.env.PARTICLE_PHOTON_ID;
@@ -10,20 +14,36 @@ const orb = new Orb(particlePhotonId, particleApiKey);
 
 const webhookSecret = process.env.GITHUB_WEBHOOK_SECRET;
 
-function resetColorGreen() {
+const resetColorGreen = () => {
     orb.setColor('green');
-}
+};
 
-function flashRedForTenSecondsThenGreen() {
+const setRedForTenSecondsThenGreen = () => {
+    console.log("Github signature verified, setting color");
     orb.setColor('red');
     // schedule reset to green in 10 seconds
     setTimeout(resetColorGreen, 10000);
-}
+};
 
-app.get("/", (req, res) => {
-    console.log("GET /");
-    if(req.secret == webhookSecret) {
-        flashRedForTenSecondsThenGreen();
+// check that the webhook really is from Github
+const verifyGithub = (req) => {
+    let sig = req.headers['x-hub-signature'];
+    let payload = JSON.stringify(req.body);
+    let oursig = crypto
+        .createHmac('sha1', webhookSecret)
+        .update(payload)
+        .digest('hex');
+
+    let sigExpected = Buffer.from(sig);
+    let sigActual = Buffer.from(`sha1=${oursig}`);
+
+    return crypto.timingSafeEqual(sigExpected, sigActual);
+};
+
+app.post("/blink", (req, res) => {
+    console.log("POST /blink");
+    if(verifyGithub(req)) {
+        setRedForTenSecondsThenGreen();
         res.status = 200;
         res.send("");
     } else {
