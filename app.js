@@ -51,10 +51,12 @@ const verifyGithub = (req) => {
 app.post("/blink", (req, res) => {
     console.log("POST /blink");
     if(verifyGithub(req)) {
-        console.log("Github signature verified, setting color");
+        console.log("Github signature verified");
         if(req.body.action && req.body.action.match(/opened$/)) {
+            console.log("setting color to red for 10 seconds");
             setRedForTenSecondsThenGreen();
         } else if(req.body.action == "closed") {
+            console.log("setting color to blue for 5 seconds");
             setBlueForFiveSecondsThenGreen();
         }
         res.status = 200;
