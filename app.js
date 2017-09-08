@@ -19,10 +19,15 @@ const resetColorGreen = () => {
 };
 
 const setRedForTenSecondsThenGreen = () => {
-    console.log("Github signature verified, setting color");
     orb.setColor('red');
     // schedule reset to green in 10 seconds
     setTimeout(resetColorGreen, 10000);
+};
+
+const setBlueForFiveSecondsThenGreen = () => {
+    orb.setColor('blue');
+    // schedule reset to green in 5 seconds
+    setTimeout(resetColorGreen, 5000);
 };
 
 // check that the webhook really is from Github
@@ -43,12 +48,16 @@ const verifyGithub = (req) => {
 app.post("/blink", (req, res) => {
     console.log("POST /blink");
     if(verifyGithub(req)) {
+        console.log("Github signature verified, setting color");
         if(req.body.action.match(/opened$/)) {
             setRedForTenSecondsThenGreen();
+        } else if(req.body.action == "closed") {
+            setBlueForFiveSecondsThenGreen();
         }
         res.status = 200;
         res.send("");
     } else {
+        console.log("Signature failed verification, not from github");
         res.status = 401;
         res.send("");
     }
