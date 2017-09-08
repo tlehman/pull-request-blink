@@ -33,6 +33,9 @@ const setBlueForFiveSecondsThenGreen = () => {
 // check that the webhook really is from Github
 const verifyGithub = (req) => {
     let sig = req.headers['x-hub-signature'];
+    if(!sig) {
+        return false;
+    }
     let payload = JSON.stringify(req.body);
     let oursig = crypto
         .createHmac('sha1', webhookSecret)
