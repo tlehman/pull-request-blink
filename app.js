@@ -43,7 +43,9 @@ const verifyGithub = (req) => {
 app.post("/blink", (req, res) => {
     console.log("POST /blink");
     if(verifyGithub(req)) {
-        setRedForTenSecondsThenGreen();
+        if(req.body.action.match(/opened$/)) {
+            setRedForTenSecondsThenGreen();
+        }
         res.status = 200;
         res.send("");
     } else {
